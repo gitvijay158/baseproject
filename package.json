@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ENV=dev nodemon app.js",
-    "local": "ENV=local nodemon app.js",
+    "dev": "ENV=dev nodemon server.js",
+    "local": "ENV=local nodemon server.js",
     "rnd": "node test.js"
   },
   "keywords": [],
@@ -20,7 +20,10 @@
     "flat": "^5.0.2",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.29.3",
     "mongodb": "^3.6.5",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
     "node-cron": "^3.0.0",
     "path": "^0.12.7",
     "pug": "^3.0.2",
