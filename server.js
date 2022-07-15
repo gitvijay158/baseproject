@@ -30,7 +30,7 @@ app.get("/", function (req, res) {
 
 
 const datewiseTime = async () => {
-    dbConn.query("SELECT * FROM `server_up_time` WHERE is_migrated=0 ORDER BY `id` ", function (err, result) {
+    dbConn.query("SELECT * FROM `server_up_time` WHERE is_migrated=0 ORDER BY `id` limit 10000", function (err, result) {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -58,17 +58,20 @@ const convertTime = async (dataServerUpTime) => {
     // ALTER TABLE `server_up_time` ADD `is_migrated` TINYINT NOT NULL DEFAULT '0' AFTER `client_alias`;
     // ALTER TABLE `server_datewise_uptime_logs` ADD `server_uptime_id` INT NOT NULL AFTER `server_update`, ADD `unique_key` VARCHAR(120) NOT NULL AFTER `server_uptime_id`;
     // ALTER TABLE `server_datewise_uptime_logs` ADD `start_date_time` DATETIME NOT NULL AFTER `unique_key`, ADD `end_day_time` DATETIME NOT NULL AFTER `start_date_time`, ADD `seconds` INT NOT NULL AFTER `end_day_time`;
+    // ALTER TABLE `server_datewise_uptime_logs` ADD `totalseconds` INT NOT NULL AFTER `seconds`;
 
     console.log(dataServerUpTime);
 
     var dataFormat = dataServerUpTime.uptime;
 
     // purpose.replace(",", "")
-    var result = dataFormat.replace("", "").trim().split(/\s+/);
+    var result = dataFormat.replace("", "").trim().split(/[\s_]+/);
+
+    console.log(result)
 
     var startdatetime = result[2] + '-' + result[1] + '-' + result[0] + ' ' + result[3];
     // var startdate  = result[0]+result[1]+result[2];
-    // console.log(startdatetime);
+     console.log(startdatetime);
 
     var index = 0;
     var tillTime = '';
@@ -97,26 +100,68 @@ const convertTime = async (dataServerUpTime) => {
 
     var tillTime = tillTime.split(/\,+/);
 
+   
+
+    var changes = 0;
+
     for (const t of tillTime) {
         var data = t.trim().split(/\s+/);
 
-        if (data[1] && (data[1] == 'days' || data[1] == 'day')) {
-            datetime = moment(datetime).add(parseInt(data[0]), 'days');
-        }
-        if (data[1] && (data[1] == 'hours' || data[1] == 'hour')) {
-            datetime = moment(datetime).add(parseInt(data[0]), 'hours');
 
+
+        if (data[1] && (data[1] == 'days' || data[1] == 'day' || data[1] == 'd')) {
+            datetime = moment(datetime).add(parseInt(data[0]), 'days');
+            changes = 1;
+        }
+        if (data[1] && (data[1] == 'hours' || data[1] == 'hour' || data[1] == 'h')) {
+            datetime = moment(datetime).add(parseInt(data[0]), 'hours');
+            changes = 1;
             // console.log("hours" + parseInt(data[0]))
         }
-        if (data[1] && (data[1] == 'minutes' || data[1] == 'minute')) {
+        if (data[1] && (data[1] == 'minutes' || data[1] == 'minute' || data[1] == 'm')) {
             datetime = moment(datetime).add(parseInt(data[0]), 'minutes');
-
+            changes = 1;
             //console.log("minutes" + parseInt(data[0]))
         }
-        if (data[1] && (data[1] == 'seconds' || data[1] == 'second')) {
+        if (data[1] && (data[1] == 'seconds' || data[1] == 'second'  || data[1] == 's')) {
             datetime = moment(datetime).add(parseInt(data[0]), 'seconds');
-
+            changes = 1;
             //console.log("minutes" + parseInt(data[0]))
+        }
+
+    }
+
+    if(changes==0){
+        for (const t of tillTime) {
+            var data21 = t.trim().split(/\s+/);
+
+            const reg = /([0-9.]+)(?![0-9.])|([a-z]+)(?![a-z])/gi
+
+
+            for(const t2 of data21){
+                var breakData = t2.trim().match(reg);
+
+                if (breakData[1] == 'd') {
+                    datetime = moment(datetime).add(parseInt(breakData[0]), 'days');
+                   
+                }
+                if ( breakData[1] == 'h') {
+                    datetime = moment(datetime).add(parseInt(breakData[0]), 'hours');
+                    
+                }
+                if ( breakData[1] == 'm') {
+                    datetime = moment(datetime).add(parseInt(breakData[0]), 'minutes');
+                   
+                }
+                if ( breakData[1] == 's') {
+                    datetime = moment(datetime).add(parseInt(breakData[0]), 'seconds');
+                   
+                }
+            }
+
+            
+    
+
         }
 
     }
@@ -124,15 +169,15 @@ const convertTime = async (dataServerUpTime) => {
     // console.log(moment(datetime, "DD MM YYYY hh:mm:ss", true));
     // console.log(tillTime);
 
-    console.log(datetime)
+   // console.log(datetime)
     var startdate = moment([moment(startdatetime).year(), moment(startdatetime).month(), moment(startdatetime).date(), moment(startdatetime).hours(), moment(startdatetime).minutes()]);
     var enddate = moment([moment(datetime).year(), moment(datetime).month(), moment(datetime).date(), moment(datetime).hours(), moment(datetime).minutes()]);
     var midnightDate = moment([moment(startdatetime).year(), moment(startdatetime).month(), moment(startdatetime).add(1, 'day').date()]);
 
-    console.log('startdate : ');
-    console.log(startdate)
-    console.log('enddate : ' ) 
-    console.log(enddate)
+   //console.log('startdate : ');
+   // console.log(startdate)
+  //  console.log('enddate : ' ) 
+  //  console.log(enddate)
 
 
     var totalStartEndSeconds = enddate.diff(startdate, 'seconds');
@@ -141,7 +186,7 @@ const convertTime = async (dataServerUpTime) => {
 
     var insertArray = [];
 
-    console.log(totalStartEndSeconds + '  '  + totalSeconds)
+    //console.log(totalStartEndSeconds + '  '  + totalSeconds)
    // return false
 
     if (totalStartEndSeconds < perdaysecond) {
@@ -183,7 +228,7 @@ const convertTime = async (dataServerUpTime) => {
         }
     }
 
-    console.log(insertArray);
+    //console.log(insertArray);
 
     if (insertArray.length > 0) {
 
@@ -204,24 +249,16 @@ const convertTime = async (dataServerUpTime) => {
                 "server_update": moment(innerData.startdate).format('YYYY-MM-DD')  ,
                 "server_uptime_id": dataServerUpTime.id,
                 "unique_key": uniquekey,
-                "start_date_time": innerData.startdate,
-                "end_day_time": innerData.enddate,
-                "seconds": innerData.seconddiff
-
-
+                "start_date_time": moment(innerData.startdate).format('YYYY-MM-DD HH:mm:ss'),
+                "end_day_time": moment(innerData.enddate).format('YYYY-MM-DD HH:mm:ss'), 
+                "seconds": innerData.seconddiff,
+                "totalseconds" : totalStartEndSeconds
             };
-
             console.log(dateLogs)
-           await insertTimeLogs(dateLogs);
+          const result =  await insertTimeLogs(dateLogs);   
 
-          
-        }
-
-
-   
-        await updateImgratedStatus(dataServerUpTime.id);
-
-     
+        }   
+        await updateImgratedStatus(dataServerUpTime.id);   
 
     }
 
