@@ -21,5 +21,5 @@ app.use('/user', userRoute);
 
 
 app.listen(3001, () => {
-    console.log("server RND ready")
+    console.log("server RND ready http://localhost/3001")
 })
