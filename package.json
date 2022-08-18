@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ENV=dev nodemon server.js",
     "local": "ENV=local nodemon server.js",
-    "rnd": "node test.js"
+    "rnd": "node server1.js"
   },
   "keywords": [],
   "author": "",

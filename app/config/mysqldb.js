@@ -1,12 +1,22 @@
 
 const mysql = require('mysql');
+
+
+const {
+  MYSQL_DB_USER,
+  MYSQL_DB_PASSWORD,
+  MYSQL_DB_HOST,
+  MYSQL_DB_PORT,
+  MYSQL_DB_NAME,
+} = process.env;
+
 //local mysql db connection
 const dbConn = mysql.createConnection({
   connectionLimit: 10,
-  host     : 'localhost',
-  user     : 'root',
-  password : 'EDU23*EXM23',
-  database : 'lab',
+  host     : MYSQL_DB_HOST,
+  user     : MYSQL_DB_USER,
+  password : MYSQL_DB_PASSWORD,
+  database : MYSQL_DB_NAME,
   timezone: 'utc' 
 
 });

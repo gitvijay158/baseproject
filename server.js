@@ -1,7 +1,7 @@
 const express = require("express")
 const app = express();
 const bodyParser = require('body-parser')
-const dotenv = require('dotenv');
+const dotenv = require('dotenv').config();
 const jwt = require('jsonwebtoken');
 var userRoute = require("./app/routes/routeUser.js");
 
@@ -11,14 +11,15 @@ var moment = require('moment'); // require
 
 
 
+const PORT = process.env.NODE_DOCKER_PORT || 3001;
+
 
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 
-// Set up Global configuration access
-dotenv.config();
+
 
 
 
@@ -320,6 +321,6 @@ const hhmmss =  (secs) => {
 
 
 
-app.listen(3001, () => {
+app.listen(PORT, () => {
     console.log("server RND ready")
 })
