@@ -16,7 +16,7 @@ const {
 exports.connect = () => {
   // Connecting to the database
   mongoose
-    .connect(`mongodb://host.docker.internal:27017/${DB_NAME}`, {
+    .connect(`mongodb://10.100.100.227:27017/${DB_NAME}`, {
      /* useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false, */
