@@ -6,9 +6,9 @@ COPY package.json /app
 COPY . /app
 EXPOSE 3001
 RUN npm install --loglevel verbose
-CMD ["npm","start" ]
-
-RUN node server.js 
+ 
+CMD [ "npm", "start", "main-project.js" ]
+ 
 
 
 

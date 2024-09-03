@@ -1,30 +1,30 @@
 
-const mysql = require('mysql');
+// const mysql = require('mysql');
 
 
-const {
-  MYSQL_DB_USER,
-  MYSQL_DB_PASSWORD,
-  MYSQL_DB_HOST,
-  MYSQL_DB_PORT,
-  MYSQL_DB_NAME,
-} = process.env;
+// const {
+//   MYSQL_DB_USER,
+//   MYSQL_DB_PASSWORD,
+//   MYSQL_DB_HOST,
+//   MYSQL_DB_PORT,
+//   MYSQL_DB_NAME,
+// } = process.env;
 
-//local mysql db connection
-const dbConn = mysql.createConnection({
-  connectionLimit: 10,
-  host     : MYSQL_DB_HOST,
-  user     : MYSQL_DB_USER,
-  password : MYSQL_DB_PASSWORD,
-  database : MYSQL_DB_NAME,
-  timezone: 'utc' 
+// //local mysql db connection
+// const dbConn = mysql.createConnection({
+//   connectionLimit: 10,
+//   host     : MYSQL_DB_HOST,
+//   user     : MYSQL_DB_USER,
+//   password : MYSQL_DB_PASSWORD,
+//   database : MYSQL_DB_NAME,
+//   timezone: 'utc' 
 
-});
-dbConn.connect(function(err) {
-  if (err) throw err;
-  console.log("My SQL Database Connected!");
-});
-module.exports = dbConn;
+// });
+// dbConn.connect(function(err) {
+//   if (err) throw err;
+//   console.log("My SQL Database Connected!");
+// });
+// module.exports = dbConn;
 
 
 

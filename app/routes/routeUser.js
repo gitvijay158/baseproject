@@ -4,7 +4,7 @@ const router = express.Router();
 const user = require('../controller/userController.js');
 const auth = require('../middleware/auth')
 
-router.get('/userlist', user.userList);
+router.get('/userlist', user.alluser);
 router.post('/adduser', user.adduser);
 router.post('/updateuser/:id?', user.updateuser);
 
